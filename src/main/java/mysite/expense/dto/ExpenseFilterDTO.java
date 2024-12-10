@@ -13,4 +13,10 @@ public class ExpenseFilterDTO {
 
     //순서
     private String sortBy;
+
+    //시작일
+    private String startDate;
+
+    //종료일
+    private String endDate;
 }

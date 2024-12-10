@@ -1,16 +1,16 @@
 package mysite.expense.service;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import mysite.expense.dto.ExpenseDTO;
+import mysite.expense.dto.ExpenseFilterDTO;
 import mysite.expense.entity.Expense;
 import mysite.expense.repository.ExpenseRepository;
 import mysite.expense.util.DateTimeUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -79,8 +79,19 @@ public class ExpenseService {
         return mapToDTO(expense);//DTO 변환
     }
 
-    public List<ExpenseDTO> getFilterExpenses(String keyword, String sortBy) {
-        List<Expense> list = expRepo.findByNameContainingOrDescriptionContaining(keyword, keyword);
+    public List<ExpenseDTO> getFilterExpenses(ExpenseFilterDTO filterDTO) throws ParseException {
+        String keyword = filterDTO.getKeyword();
+        String sortBy = filterDTO.getSortBy();
+        String startDate = filterDTO.getStartDate();
+        String endDate = filterDTO.getEndDate();
+
+        //sql 날짜로 문자열 시작일과 종료일을 변환
+        Date startDay = !startDate.isEmpty() ? DateTimeUtil.convertStringToDate(startDate) : new Date(0);
+        Date endDay = !endDate.isEmpty() ? DateTimeUtil.convertStringToDate(endDate) : new Date(System.currentTimeMillis());
+
+
+
+        List<Expense> list = expRepo.findByNameContainingAndDateBetween(keyword, startDay, endDay);
         List<ExpenseDTO> filterlist = list.stream().map(this::mapToDTO).collect(Collectors.toList());
 
         if(sortBy.equals("date")) {
@@ -90,6 +101,14 @@ public class ExpenseService {
         }
         return filterlist;
     }
+    //리스트의 총비용을 계산
+    public Long totalExpenses(List<ExpenseDTO> expenses){
+        Long sum = expenses.stream()
+                .mapToLong(ExpenseDTO::getAmount).sum();
+        return sum;
+    }
+
+
 
 
 }
