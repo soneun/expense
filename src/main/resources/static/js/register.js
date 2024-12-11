@@ -43,8 +43,12 @@ $(function () {
                     equalTo: '패스워드가 같지 않습니다!'
                 }
 
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('help-block');
+                error.insertAfter(element);
             }
-
 
         })
     }

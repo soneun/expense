@@ -19,4 +19,10 @@ public class ExpenseFilterDTO {
 
     //종료일
     private String endDate;
+
+    //이번달 첫일과 오늘까지 날짜를 문자열로 넣은 생성자
+    public ExpenseFilterDTO(String startDate, String endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

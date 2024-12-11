@@ -18,12 +18,20 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     private String expenseId;
+
     private String name;
+
     private String description;
+
     private long amount;
+
     private Date date;
+
+    @ManyToOne
+    private User user;//유저 1명이 여러 비용 등록
 
 
 }

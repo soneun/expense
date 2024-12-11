@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import mysite.expense.dto.ExpenseDTO;
 import mysite.expense.dto.ExpenseFilterDTO;
 import mysite.expense.service.ExpenseService;
+import mysite.expense.util.DateTimeUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,7 +49,7 @@ public class ExpenseController {
     public String showList(Model model) {
         List<ExpenseDTO> list = expService.getAllExpenses();
         model.addAttribute("expenses",expService.getAllExpenses());
-        model.addAttribute("filter", new ExpenseFilterDTO());
+        model.addAttribute("filter", new ExpenseFilterDTO(DateTimeUtil.getCurrentMonthStartDate(), DateTimeUtil.getCurrentMonthDate()));
         Long total = expService.totalExpenses(list);
         model.addAttribute("total",total);
         return"e_list";
